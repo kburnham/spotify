@@ -47,6 +47,9 @@ playlists = pd.DataFrame(r['items'])
 
 len(playlists)
 
+playlists.columns
+playlists.name
+
 ## now need to get the songs for each playlist, probably can ignore a few
 
 ignore = ['Twinkle, Twinkle, Little Star',
@@ -63,7 +66,10 @@ ignore = ['Twinkle, Twinkle, Little Star',
           'Ultimate "RISK" Playlist']
 
 
-playlists[~playlists.name.isin(ignore)]
+playlists = playlists[~playlists.name.isin(ignore)]
+
+httc = playlists[playlists.name.str.contains('httc')][['name', 'id']]
+
 
 playlist_id = '2SsbpCSaWdYeongOlvuq6t'
 
@@ -108,21 +114,23 @@ def get_playlist_songs(id: str, playlists: pd.DataFrame, headers: dict):
 
     tracks = pd.DataFrame(tracks_df['track'].values.tolist(), index=tracks_df.index).fillna('').astype(str)
     tracks_df['track_name'] =  tracks.name
+    tracks_df['track_id'] = [dict(eval(x))['id'] for x in tracks.album]
 
     tracks_df['album_name'] = [dict(eval(x))['name'] for x in tracks.album]
+
 
     tracks_df['first_artist'] = [list(eval(x))[0]['name'] for x in tracks.artists]
 
     tracks_df['playlist_name'] = playlist_name
 
-    return(tracks_df[['track_name', 'first_artist', 'album_name', 'playlist_name']])
+    return(tracks_df[['track_name', 'track_id', 'first_artist', 'album_name', 'playlist_name']])
+
+playlist_id = list(httc.id)[0]
+
+get_playlist_songs(playlist_id, playlists = httc, headers = headers)
 
 
-get_playlist_songs(playlist_id, playlists, headers)
-
-
-
-all_tracks = [get_playlist_songs(x, playlists, headers) for x in playlists[~playlists.name.isin(ignore)].id]
+all_tracks = [get_playlist_songs(x, httc, headers) for x in httc.id]
 
 all_tracks[31]
 
@@ -140,3 +148,27 @@ all_tracks_df.playlist_name.value_counts()
 
 
 all_tracks_df[~all_tracks_df.playlist_name.isin(ignore)].to_csv('~/spotify_playlist_tracks.csv')
+
+
+
+
+playlist_name = playlists[playlists['id'] == playlist_id]['name'].values[0]
+
+tracks_url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
+
+tracks_res = requests.get(url = tracks_url, headers=headers)
+tracks_json = tracks_res.json()
+tracks_df = pd.DataFrame(tracks_json['items'])
+
+
+tracks_df.track[0]['id']
+
+
+
+# create playlist
+
+
+res = requests.post(url = playlist_url, headers=headers,  data = {"name": "httc-all", "description": "playlist combining all songs in httc playlists", "public": "true"})
+
+
+res.json()
