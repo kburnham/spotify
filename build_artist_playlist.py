@@ -132,7 +132,7 @@ for artist in artists:
 
 
 
-def add_artitsts_to_playlist(playlist_id: str, artists: list, sp: spotipy.client.Spotify, username: str, track_count: int = 5) -> dict:
+def add_artists_to_playlist(playlist_id: str, artists: list, sp: spotipy.client.Spotify, username: str, track_count: int = 5) -> dict:
     """given a list of artists, look them up and get the top `count` tracks for each artist on the list
         creates a spotify playlist for `username` and returns a dict with lists of successes and failures"""
     
@@ -176,7 +176,7 @@ pl_id = pl_metadata['id']
 pl_id = '3imhN2NJFFgYaYVZtN8GuP'
 
 
-pl_data = add_artitsts_to_playlist(playlist_id=pl_id, artists=artists, sp=sp, username=username)
+pl_data = add_artists_to_playlist(playlist_id=pl_id, artists=artists, sp=sp, username=username)
 
 
 search_artist_name('Jimi Hendrix', sp)

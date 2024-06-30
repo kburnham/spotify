@@ -11,9 +11,6 @@ CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 
 username='kevinburnham'
-
-
-# POST
 auth_response = requests.post(AUTH_URL, {
     'grant_type': 'client_credentials',
     'client_id': CLIENT_ID,
@@ -36,42 +33,17 @@ playlist_url = f'https://api.spotify.com/v1/users/{username}/playlists?limit=50&
 
 
 res = requests.get(url = playlist_url, headers=headers)
-
 r = res.json()
-r['items']
-
-r.keys()
-
-
 playlists = pd.DataFrame(r['items'])
 
-len(playlists)
-
-playlists.columns
-playlists.name
 
 ## now need to get the songs for each playlist, probably can ignore a few
 
-ignore = ['Twinkle, Twinkle, Little Star',
-          'Beast Mode',
-          'My Playlist #31',
-          'My playlist #28',
-          'RcxddrrsaXe',
-          'Wake up kids',
-          'Havana – Camila Cabello',
-          '5 Little Ducks',
-          'Dylan Covers',
-          'Arabic 2023',
-          'bd2019',
-          'Ultimate "RISK" Playlist']
-
-
-playlists = playlists[~playlists.name.isin(ignore)]
 
 httc = playlists[playlists.name.str.contains('httc')][['name', 'id']]
+httc
 
-
-playlist_id = '2SsbpCSaWdYeongOlvuq6t'
+playlist_id = '2NBoVDfu9WgyEZ3KvIs94j'
 
 tracks_url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
 
@@ -98,8 +70,9 @@ tracks_df['first_artist'] = [list(eval(x))[0]['name'] for x in tracks.artists]
 
 tracks_df[['track_name', 'first_artist', 'album_name']]
 
-
-# i want a function that given a platlist id (and name) returns a dataframe with 'playlist_name', 'track_name', 'first_artist', 'album_name'
+for row in tracks_df[['track_name', 'first_artist', 'album_name']].to_dict(orient="records"):
+    print(row['track_name'], '-', row['first_artist'])
+# i want a function that given a playlist id (and name) returns a dataframe with 'playlist_name', 'track_name', 'first_artist', 'album_name'
 
 
 def get_playlist_songs(id: str, playlists: pd.DataFrame, headers: dict):
