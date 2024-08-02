@@ -36,6 +36,9 @@ res = requests.get(url = playlist_url, headers=headers)
 r = res.json()
 playlists = pd.DataFrame(r['items'])
 
+playlists.columns
+playlists[['name', 'id']]
+
 
 ## now need to get the songs for each playlist, probably can ignore a few
 
@@ -43,7 +46,7 @@ playlists = pd.DataFrame(r['items'])
 httc = playlists[playlists.name.str.contains('httc')][['name', 'id']]
 httc
 
-playlist_id = '2NBoVDfu9WgyEZ3KvIs94j'
+playlist_id = '7mIR7zf5jAaFlhi77D5OUR'
 
 tracks_url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
 
@@ -54,8 +57,10 @@ tracks_json = tracks_res.json()
 
 tracks_df = pd.DataFrame(tracks_json['items'])
 
-tracks_df.track[0].keys()
+tracks_df.track
 
+tracks_df.track[0]
+tracks_df.track[0]
 
 # convert keys to list
 # df = pd.DataFrame(df['column1'].values.tolist(), index=df.index).fillna(0).astype(int)
@@ -67,13 +72,16 @@ tracks_df['track_name'] =  tracks.name
 tracks_df['album_name'] = [dict(eval(x))['name'] for x in tracks.album]
 
 tracks_df['first_artist'] = [list(eval(x))[0]['name'] for x in tracks.artists]
+tracks_df['id'] = tracks.id
 
-tracks_df[['track_name', 'first_artist', 'album_name']]
+tracks_df[['id', 'track_name', 'first_artist', 'album_name']]
 
 for row in tracks_df[['track_name', 'first_artist', 'album_name']].to_dict(orient="records"):
     print(row['track_name'], '-', row['first_artist'])
 # i want a function that given a playlist id (and name) returns a dataframe with 'playlist_name', 'track_name', 'first_artist', 'album_name'
 
+# list(sp.audio_features('7tr2za8SQg2CI8EDgrdtNl')[0].keys()))
+sp.audio_features('7tr2za8SQg2CI8EDgrdtNl')
 
 def get_playlist_songs(id: str, playlists: pd.DataFrame, headers: dict):
     # get the name from the df
