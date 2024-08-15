@@ -8,8 +8,8 @@ from pprint import pprint
 from dotenv import load_dotenv
 
 # ---- SET THESE VARIABLES ----
-NEW_PLAYLIST_NAME = 'lollapalooza_2024'
-ARTIST_SOURCE_FILE = 'artist_lists/lollapalooza_2024.txt'
+NEW_PLAYLIST_NAME = 'nos_alive_2024'
+ARTIST_SOURCE_FILE = 'artist_lists/nos_alive_2024.txt'
 TRACKS_PER_ARTIST = 5
 # -----------------------------
 
