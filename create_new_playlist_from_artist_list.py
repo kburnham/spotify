@@ -1,4 +1,3 @@
-
 import spotipy
 import pandas as pd
 from spotipy.oauth2 import SpotifyOAuth
@@ -8,8 +7,8 @@ from pprint import pprint
 from dotenv import load_dotenv
 
 # ---- SET THESE VARIABLES ----
-NEW_PLAYLIST_NAME = 'nos_alive_2024'
-ARTIST_SOURCE_FILE = 'artist_lists/nos_alive_2024.txt'
+NEW_PLAYLIST_NAME = 'acl_2025'
+ARTIST_SOURCE_FILE = 'artist_lists/acl_2025_artists.txt'
 TRACKS_PER_ARTIST = 5
 # -----------------------------
 
@@ -29,6 +28,8 @@ new_playlist_id = playlist_metadata['id']
 with open(ARTIST_SOURCE_FILE) as file:
     artists = [line.rstrip() for line in file]
 
+# remove duplicates
+artists = list(set(artists))
 
 
 def search_artist_name(artist_name: str, sp: spotipy.client.Spotify) -> str:
@@ -55,26 +56,35 @@ track_count = TRACKS_PER_ARTIST
 already_done = list()
 fails = list()
 for artist in artists:
-    print(artist)
+    # print(artist)
     if artist in already_done:
-        print(f'{artist} already done.')
+        # print(f'{artist} already done.')
         continue
     if artist in fails:
-        print(f'{artist} already failed')
+        # print(f'{artist} already failed')
         continue
     artist_uri = search_artist_name(artist, sp)
-    print(artist_uri)
+    # print(artist_uri)
     try: 
         top_tracks = get_artist_top_tracks_uris(artist_uri, track_count, sp)
     except:
-        print(f'no tracks found for {artist}')
+        # print(f'no tracks found for {artist}')
         fails.append(artist)
         continue
-    print(f'length of top tracks: {len(top_tracks)}')
+    # print(f'length of top tracks: {len(top_tracks)}')
     try: 
         sp.user_playlist_add_tracks(user=username, playlist_id=new_playlist_id, tracks=top_tracks, position=None)
-        print(f'{len(top_tracks)} tracks added to playlist for {artist}')
+        # print(f'{len(top_tracks)} tracks added to playlist for {artist}')
         already_done.append(artist)
     except:
-        print(f'adding tracks for {artist} failed')
+        # print(f'adding tracks for {artist} failed')
         fails.append(artist)
+
+
+print('Tracks were added for the following artists: ')
+for x in already_done:
+    print(x)
+
+print('No tracks were found for these artists: ')
+for x in fails:
+    print(x)

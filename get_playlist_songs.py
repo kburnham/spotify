@@ -44,9 +44,9 @@ playlists[['name', 'id']]
 
 
 httc = playlists[playlists.name.str.contains('httc')][['name', 'id']]
-httc
 
-playlist_id = '7mIR7zf5jAaFlhi77D5OUR'
+
+playlist_id = '5yDZ6L54oeHoeeY003CdLv'
 
 tracks_url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
 
