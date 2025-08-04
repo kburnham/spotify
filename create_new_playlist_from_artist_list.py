@@ -7,9 +7,10 @@ from pprint import pprint
 from dotenv import load_dotenv
 
 # ---- SET THESE VARIABLES ----
-NEW_PLAYLIST_NAME = 'acl_2025'
-ARTIST_SOURCE_FILE = 'artist_lists/acl_2025_artists.txt'
-TRACKS_PER_ARTIST = 5
+ARTIST_SOURCE_FILE = 'artist_lists/treefort_2025_artists.txt'
+NEW_PLAYLIST_NAME = os.path.splitext(os.path.basename(ARTIST_SOURCE_FILE))[0]
+print(NEW_PLAYLIST_NAME)
+TRACKS_PER_ARTIST = 4
 # -----------------------------
 
 load_dotenv()
@@ -68,7 +69,7 @@ for artist in artists:
     try: 
         top_tracks = get_artist_top_tracks_uris(artist_uri, track_count, sp)
     except:
-        # print(f'no tracks found for {artist}')
+        print(f'no tracks found for {artist}')
         fails.append(artist)
         continue
     # print(f'length of top tracks: {len(top_tracks)}')
